@@ -4,6 +4,8 @@ import com.example.firstproject.dto.CommentForm;
 import com.example.firstproject.entity.Comment;
 import com.example.firstproject.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,27 +17,31 @@ public class CommentApiController {
 
 
     // 조회
-    @GetMapping("/articles/{articleId}/comments")
-    public List<Comment> index(@PathVariable Long articleId) {
-        return commentService.index(articleId);
+    @GetMapping("/api/articles/{articleId}/comments")
+    public ResponseEntity<List<CommentForm>> comments(@PathVariable Long articleId) {
+        List<CommentForm> dtos = commentService.comments(articleId);
+        return ResponseEntity.status(HttpStatus.OK).body(dtos);
     }
 
     // 생성
-    @PostMapping("/articles/{articleId}/comments")
-    public Comment create(@PathVariable Long articleId, @RequestBody CommentForm dto) {
-        return commentService.create(articleId, dto);
+    @PostMapping("/api/articles/{articleId}/comments")
+    public ResponseEntity<CommentForm> create(@PathVariable Long articleId, @RequestBody CommentForm dto) {
+        CommentForm comment = commentService.create(articleId, dto);
+        return ResponseEntity.status(HttpStatus.OK).body(comment);
     }
 
     // 수정
-    @PatchMapping("/comments/{id}")
-    public Comment update(@PathVariable Long id) {
-        return commentService.update(id);
+    @PatchMapping("/api/comments/{id}")
+    public ResponseEntity<CommentForm> update(@PathVariable Long id, @RequestBody CommentForm dto) {
+        CommentForm comment = commentService.update(id, dto);
+        return ResponseEntity.status(HttpStatus.OK).body(comment);
     }
 
     // 삭제
-    @DeleteMapping("/comments/{id}")
-    public Comment delete(@PathVariable Long id) {
-        return commentService.delete(id);
+    @DeleteMapping("/api/comments/{id}")
+    public ResponseEntity<CommentForm> delete(@PathVariable Long id) {
+        CommentForm comment = commentService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }
